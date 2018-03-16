@@ -21,7 +21,7 @@ namespace Microwave.Test.Integration
         private Button _driverStartCancelButton;
         //LEG
         // Included
-        private UserInterface UserInterface;
+        private UserInterface _userInterface;
         // Unit under test
         private ICookController _cookController;
         //stubs/mock
@@ -39,35 +39,32 @@ namespace Microwave.Test.Integration
             _driverPowerButton = new Button();
             _driverTimeButton = new Button();
             _driverStartCancelButton = new Button();
-            // Included
-            UserInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
-            // Unit under test
-            _cookController = new CookController(_timer, _display, _powertube);
+           
             // Stubs/mocks
             _display = Substitute.For<IDisplay>();
             _timer = Substitute.For<ITimer>();
             _powertube = Substitute.For<IPowerTube>();
             _light = Substitute.For<ILight>();
+
+            // Included
+            _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
+            // Unit under test
+            _cookController = new CookController(_timer, _display, _powertube);
         }
 
         #region UserInterface.Integration
         [Test]
 
-        public void OnStartCancelPressed_StartCookingTrue();
+        public void OnStartCancelPressed_StartCookingTrue()
         {
-        _driverStartCancelButton.pressed();
-        _cookController.StartCooking();
-        _light.Recieved().TurnOn();       
+            _driverStartCancelButton.Press();
+            _cookController.StartCooking(75,1000);
+            _light.Received().TurnOn();
 
 
         }
 
-
-
-
+        #endregion
     }
-
-
-
 
 }
