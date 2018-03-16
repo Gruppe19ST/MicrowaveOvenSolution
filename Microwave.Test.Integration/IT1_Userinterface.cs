@@ -60,10 +60,42 @@ namespace Microwave.Test.Integration
         #region Button.Integration
 
         [Test]
-        public void OnPowerPressed_ShowPower_ShowPower()
+        public void OnPowerPressed_ShowPower_ShowPowerTrue()
         {
-
+            _driverPowerButton.Press();
+            _display.Received().ShowPower(50);
         }
+
+        [Test]
+        public void OnTimePressed_ShowTime_ShowTimeTrue()
+        {
+            // Power button skal trykkes først, for at state er SETPOWER - ELLER OGSÅ SKAL DER SKRIVES OM DER
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _display.Received().ShowTime(1,0);
+        }
+
+        [Test]
+        public void OnStartCancelPressed_LightTurnOn_TurnOnTrue()
+        {
+            // Power og timer button skal være trykket for at være i rette state - ELLER OGSÅ SKAL DER RETTES FOR Userinterface
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _light.Received().TurnOn();
+        }
+
+        [Test]
+        public void OnStartCancelPressed_CookCtrlStartCooking_StartCookingTrue()
+        {
+            int time = 1;
+            // Power og timer button skal være trykket for at være i rette state - ELLER OGSÅ SKAL DER RETTES FOR Userinterface
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _cookController.Received().StartCooking(50,time*60);
+        }
+
         #endregion
     }
 }
