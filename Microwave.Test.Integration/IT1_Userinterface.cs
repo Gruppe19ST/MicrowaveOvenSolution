@@ -14,12 +14,14 @@ namespace Microwave.Test.Integration
         private Button _driverPowerButton;
         private Button _driverTimeButton;
         private Button _driverStartCancelButton;
-        // Unit under test
-        private UserInterface _uut;
+       
         // Stubs/mocks
         private ICookController _cookController;
         private IDisplay _display;
         private ILight _light;
+
+        // Unit under test
+        private UserInterface _uut;
 
         [SetUp]
         public void SetUp()
