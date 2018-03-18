@@ -57,6 +57,8 @@ namespace Microwave.Test.Integration
             _light.Received().TurnOff();
         }
 
+        
+
         #endregion
 
         #region Button.Integration
@@ -96,6 +98,72 @@ namespace Microwave.Test.Integration
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
             _cookController.Received().StartCooking(50,time*60);
+        }
+
+        #endregion
+
+        #region Extentions
+
+        [Test] // Extention 1: User presses StartCancel btn during power setup
+        public void StartCancelDuringSetup_ClearDisplay_DisplayIsCleared()
+        {
+            _driverDoor.Open();
+            _driverDoor.Close();
+            _driverPowerButton.Press();
+            _driverStartCancelButton.Press();
+            _display.Received().Clear();
+        }
+
+        [Test] // Extention 2: User opens door during power setup
+        public void DoorOpenDuringPowerSetup_ClearDispAndLightOn_DisplayIsClearedAndLightIsOn()
+        {
+            _driverDoor.Open();
+            _driverDoor.Close();
+            _driverPowerButton.Press();
+            _driverDoor.Open();
+            _light.Received().TurnOn();
+            _display.Received().Clear();
+        }
+
+        [Test] // Extention 2: User opens door during power setup
+        public void DoorOpenDuringTimeSetup_ClearDispAndLightOn_DisplayIsClearedAndLightIsOn()
+        {
+            _driverDoor.Open();
+            _driverDoor.Close();
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverDoor.Open();
+            _light.Received().TurnOn();
+            _display.Received().Clear();
+        }
+
+        [Test] // Extention 3: User presses StartCancel btn during cooking
+        public void StartCancelDuringCooking_CookingStops_CookingStopped()
+        {
+            _driverDoor.Open();
+            _driverDoor.Close();
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _driverStartCancelButton.Press();
+            _display.Received().Clear();
+            _light.Received().TurnOff();
+            _cookController.Received().Stop();
+
+        }
+        [Test] // Extention 4: User opens door during cooking
+        public void DoorOpensDuringCooking_CookingStops_CookingStopped()
+        {
+            _driverDoor.Open();
+            _driverDoor.Close();
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _driverDoor.Open();
+            _display.Received().Clear();
+            _light.Received().TurnOff();
+            _cookController.Received().Stop();
+
         }
 
         #endregion
