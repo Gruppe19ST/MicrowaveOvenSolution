@@ -59,6 +59,21 @@ namespace Microwave.Test.Integration
         #region Integration test
 
         [Test]
+        public void ShowPower_LogLine_LogLineCalled()
+        {
+            int power = 75;
+            _driverPowerButton.Press();
+            _display.ShowPower(power);
+            _uut.Received().OutputLine($"Display shows: {power} W");
+        }
+
+        [Test]
+        public void ShowTime_LogLine_LogLineCalled()
+        {
+
+        }
+
+        [Test]
         public void Clear_LogLine_LogLineCalled()
         {
             _driverPowerButton.Press();
