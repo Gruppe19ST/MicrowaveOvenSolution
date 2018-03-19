@@ -68,6 +68,7 @@ namespace Microwave.Test.Integration
             _driverPowerButton.Press();
             _driverPowerButton.Press();
             _output.Received().OutputLine("Display shows: 100 W");
+            
         }
 
         [Test] // UC pkt.7
@@ -86,8 +87,7 @@ namespace Microwave.Test.Integration
             _output.Received().OutputLine("Display shows: 02:00");
 
         }
-
-
+        
         #endregion
 
         #region Light

@@ -39,18 +39,23 @@ namespace Microwave.Test.Integration
             _driverTimeButton = new Button();
             _driverStartCancelButton = new Button();
 
+            // Stubs/mocks
+            _light = Substitute.For<ILight>();
+            _output = Substitute.For<IOutput>();
+
             // Unit under test
             _display = new Display(_output);
             _timer = new Timer();
             _powerTube = new PowerTube(_output);
+            // Der var en null-reference på output fordi output først
+            // blev initialiseret efter uut sådan som det stod før. 
 
             // Included
-            _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
             _cookController = new CookController(_timer, _display, _powerTube, _userInterface);
+            _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
+            
 
-            // Stubs/mocks
-            _light = Substitute.For<ILight>();
-            _output = Substitute.For<IOutput>();
+            
         }
 
         #region Display.Integration
@@ -73,8 +78,12 @@ namespace Microwave.Test.Integration
         {
             _driverStartCancelButton.Press();
             _cookController.StartCooking(75,1000);
-            _powerTube.Received().TurnOn(75);
+            _output.Received().OutputLine("PowerTube works with 75 %");
+            // .Recieved() kan kun bruges til moqs, og virkede derfor ikke med powertube. 
         }
         #endregion
+
+
+     
     }
 }
