@@ -25,7 +25,7 @@ namespace Microwave.Test.Integration
         private IPowerTube _powerTube;
 
         // Unit under test
-        private IOutput _uut;
+        private IOutput _output;
 
         // Included
         private UserInterface _userInterface;
@@ -47,10 +47,10 @@ namespace Microwave.Test.Integration
             _powerTube = Substitute.For<IPowerTube>();
 
             // Unit under test
-            _uut = Substitute.For<IOutput>();
+            _output = Substitute.For<IOutput>();
 
             // Included
-            _display = new Display(_uut);
+            _display = new Display(_output);
             _cookController = new CookController(_timer, _display, _powerTube);
             _userInterface = new UserInterface(_driverPowerButton,_driverTimeButton,_driverStartCancelButton,_driverDoor,_display,_light,_cookController);
             
@@ -64,7 +64,7 @@ namespace Microwave.Test.Integration
             int power = 75;
             _driverPowerButton.Press();
             _display.ShowPower(power);
-            _uut.Received().OutputLine($"Display shows: {power} W");
+            _output.Received().OutputLine($"Display shows: {power} W");
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Microwave.Test.Integration
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _uut.Received().OutputLine("Display cleared");
+            _output.Received().OutputLine("Display cleared");
         }
         #endregion
     }
