@@ -60,30 +60,52 @@ namespace Microwave.Test.Integration
 
         #region Display.Integration
         [Test]
-        public void OnTimerTick_ShowTimeTrue()
+        public void StartCancelPressed_OnTimerTick_DisplayShowTime()
         {
+            _driverStartCancelButton.Press();
+            _cookController.StartCooking(75,1000);
+            _cookController.OnTimerTick(_timer, EventArgs.Empty);
+            _display.ShowTime(10,00);
+            _output.Received().OutputLine("Display shows: 10:00");
         }
         #endregion
 
         #region Timer.Integration
         [Test]
-        public void StartCooking_StartTrue()
+        public void StartCancelPressed_StartCooking_TimerStart()
         {
+            _driverStartCancelButton.Press();
+            _cookController.StartCooking(75,1000);
+            _timer.Start(1000);
         }
+
+        [Test]
+        public void StartCancelPressed_OnTimerExpired_CookingDone()
+        {
+            _driverStartCancelButton.Press();
+            _cookController.OnTimerExpired(_timer, EventArgs.Empty);
+            _userInterface.CookingIsDone();
+        }
+
         #endregion
 
         #region PowerTube.Integration
         [Test]
-        public void StartCooking_TurnOnTrue()
+        public void StartCancelPressed_StartCooking_PowerTubeOn_PowerTubeLogged()
         {
             _driverStartCancelButton.Press();
             _cookController.StartCooking(75,1000);
-            _output.Received().OutputLine("PowerTube works with 75 %");
-            // .Recieved() kan kun bruges til moqs, og virkede derfor ikke med powertube. 
+            _output.Received().OutputLine("PowerTube works with 75 %"); 
+        }
+
+        [Test]
+        public void PowerTubeOff_PowerTubeLogged()
+        {
+
         }
         #endregion
 
 
-     
+
     }
 }
