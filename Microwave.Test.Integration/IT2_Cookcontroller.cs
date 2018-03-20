@@ -63,7 +63,7 @@ namespace Microwave.Test.Integration
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _powertube.Received().TurnOn(50);
+            _powertube.Received().TurnOn(1*50);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Microwave.Test.Integration
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _powertube.Received().TurnOn(100);
+            _powertube.Received().TurnOn(2*50);
         }
 
         [Test]
@@ -99,12 +99,13 @@ namespace Microwave.Test.Integration
         public void OnTimerTick_TimerPressedOnce_DisplayShowTrue()
         {
             _driverPowerButton.Press();
-            _driverTimeButton.Press();
+            _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            Thread.Sleep(1850);
-            _display.Received().ShowTime(01,59);
+            //Thread.Sleep(1850);
+            //_display.Received().ShowTime(01,59);
+            //_display.Received().ShowPower(100);
         }
 
         [Test]

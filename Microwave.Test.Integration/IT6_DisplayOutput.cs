@@ -11,7 +11,7 @@ using NSubstitute;
 
 namespace Microwave.Test.Integration
 {
-    class IT5_DisplayOutput
+    class IT6_DisplayOutput
     {
         // Drivers
         private Door _driverDoor;
@@ -25,7 +25,7 @@ namespace Microwave.Test.Integration
         private IPowerTube _powerTube;
 
         // Unit under test
-        private IOutput _output;
+        private Output _output;
 
         // Included
         private UserInterface _userInterface;
@@ -47,30 +47,52 @@ namespace Microwave.Test.Integration
             _powerTube = Substitute.For<IPowerTube>();
 
             // Unit under test
-            _output = Substitute.For<IOutput>();
+            _output = new Output();
 
             // Included
             _display = new Display(_output);
             _cookController = new CookController(_timer, _display, _powerTube);
             _userInterface = new UserInterface(_driverPowerButton,_driverTimeButton,_driverStartCancelButton,_driverDoor,_display,_light,_cookController);
-            
+            _cookController.UI = _userInterface;
+
         }
 
-        #region Integration test
+        #region Display-Output.Integration
 
         [Test]
-        public void ShowPower_LogLine_LogLineCalled()
+        public void ShowPower_Power50_LogLineCalled()
         {
-            int power = 75;
+            //int power = 75;
             _driverPowerButton.Press();
-            _display.ShowPower(power);
-            _output.Received().OutputLine($"Display shows: {power} W");
+            //_display.ShowPower(power);
+            _output.OutputLine($"Display shows: 50 W");
         }
 
         [Test]
-        public void ShowTime_LogLine_LogLineCalled()
+        public void ShowPower_Power100_LogLineCalled()
         {
+            //int power = 75;
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            //_display.ShowPower(power);
+            _output.OutputLine($"Display shows: 100 W");
+        }
 
+        [Test]
+        public void ShowTime_Time1_LogLineCalled()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _output.OutputLine($"Display shows: {1:D2}:{00:D2}");
+        }
+
+        [Test]
+        public void ShowTime_Time2_LogLineCalled()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverTimeButton.Press();
+            _output.OutputLine($"Display shows: {2:D2}:{00:D2}");
         }
 
         [Test]
@@ -79,8 +101,9 @@ namespace Microwave.Test.Integration
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _output.Received().OutputLine("Display cleared");
+            _output.OutputLine("Display cleared");
         }
         #endregion
+
     }
 }
