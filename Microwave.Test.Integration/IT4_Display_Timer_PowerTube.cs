@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using NSubstitute;
 using MicrowaveOvenClasses.Boundary;
 using MicrowaveOvenClasses.Controllers;
 using MicrowaveOvenClasses.Interfaces;
+using Timer = MicrowaveOvenClasses.Boundary.Timer;
 
 namespace Microwave.Test.Integration
 {
@@ -58,53 +60,65 @@ namespace Microwave.Test.Integration
 
         }
 
-        #region Display.Integration
-        [Test]
-        public void StartCancelPressed_OnTimerTick_DisplayShowTime()
-        {
-            _driverStartCancelButton.Press();
-            _cookController.StartCooking(75,1000);
-            _cookController.OnTimerTick(_timer, EventArgs.Empty);
-            _display.ShowTime(10,00);
-            _output.Received().OutputLine("Display shows: 10:00");
-        }
-        #endregion
-
-        #region Timer.Integration
-        [Test]
-        public void StartCancelPressed_StartCooking_TimerStart()
-        {
-            _driverStartCancelButton.Press();
-            _cookController.StartCooking(75,1000);
-            _timer.Start(1000);
-        }
+        #region DisplayAndTimer
 
         [Test]
-        public void StartCancelPressed_OnTimerExpired_CookingDone()
+        public void StartCookingForOneMinut_TimerStarts_DisplayOutputIsCorrect()
         {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _cookController.OnTimerExpired(_timer, EventArgs.Empty);
-            _userInterface.CookingIsDone();
+
+            Thread.Sleep(1050);
+            _output.Received().OutputLine("Display shows: 00:59");
+
+        }
+        [Test]
+        public void StartCookingForTwoMinut_TimerStarts_DisplayOutputIsCorrect()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+
+            Thread.Sleep(1050);
+            _output.Received().OutputLine("Display shows: 01:59");
+
         }
 
         #endregion
 
-        #region PowerTube.Integration
+        #region PowertubeAndTimer
+
         [Test]
-        public void StartCancelPressed_StartCooking_PowerTubeOn_PowerTubeLogged()
+        public void StartCooking_PowertubeAt50_OutputIsCorrect()
         {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _cookController.StartCooking(75,1000);
-            _output.Received().OutputLine("PowerTube works with 75 %"); 
+            _output.Received().OutputLine("PowerTube works with 50 %");
+           
+        }
+        [Test]
+        public void StartCooking_PowertubeAt100_OutputIsCorrect()
+        {
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _output.Received().OutputLine("PowerTube works with 100 %");
         }
 
         [Test]
-        public void PowerTubeOff_PowerTubeLogged()
+        public void CookingIsDone_PowertubeTurnsOff_OutputIsCorrect()
         {
-
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            Thread.Sleep(60050);
+            _output.Received().OutputLine("PowerTube turned off");
         }
         #endregion
-
 
 
     }
