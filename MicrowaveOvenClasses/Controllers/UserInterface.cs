@@ -60,7 +60,6 @@ namespace MicrowaveOvenClasses.Controllers
         {
             switch (myState)
             {
-                
                 case States.SETPOWER:
                     myDisplay.ShowTime(time, 0);
                     myState = States.SETTIME;

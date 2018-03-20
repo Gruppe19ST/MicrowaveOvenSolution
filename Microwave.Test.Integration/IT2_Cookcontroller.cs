@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using NSubstitute;
@@ -92,6 +93,28 @@ namespace Microwave.Test.Integration
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
             _timer.Received().Start(2*60);
+        }
+
+        [Test]
+        public void OnTimerTick_TimerPressedOnce_DisplayShowTrue()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverTimeButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            Thread.Sleep(1850);
+            _display.Received().ShowTime(01,59);
+        }
+
+        [Test]
+        public void OnTimerExpired_TimerPressedOnce_DisplayClearTrue()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _display.Received().Clear();
+
         }
         #endregion
     }
