@@ -23,7 +23,7 @@ namespace Microwave.Test.Integration
         // Included
         private UserInterface _userInterface;
         // Unit under test
-        private ICookController _cookController;
+        private CookController _cookController;
         //stubs/mock
         private IDisplay _display;
         private ITimer _timer;
@@ -46,24 +46,53 @@ namespace Microwave.Test.Integration
             _powertube = Substitute.For<IPowerTube>();
             _light = Substitute.For<ILight>();
 
-            // Included
-            _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
             // Unit under test
             _cookController = new CookController(_timer, _display, _powertube);
+
+            // Included
+            _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
+
+            _cookController.UI = _userInterface;
         }
 
         #region UserInterface.Integration
         [Test]
-
-        public void OnStartCancelPressed_StartCookingTrue()
+        public void OnStartCancelPressed_PowerPressedOnce_PowerTubeOnTrue()
         {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _cookController.StartCooking(75,1000);
-            _light.Received().TurnOn();
-
-
+            _powertube.Received().TurnOn(50);
         }
 
+        [Test]
+        public void OnStartCancelPressed_PowerPressedTwice_PowerTubeOnTrue()
+        {
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _powertube.Received().TurnOn(100);
+        }
+
+        [Test]
+        public void OnStartCancelPressed_TimerPressedOnce_TimerOnTrue()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _timer.Received().Start(1*60);
+        }
+
+        [Test]
+        public void OnStartCancelPressed_TimerPressedTwice_TimerOnTrue()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _timer.Received().Start(2*60);
+        }
         #endregion
     }
 

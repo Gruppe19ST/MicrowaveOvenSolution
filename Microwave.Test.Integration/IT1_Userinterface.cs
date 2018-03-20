@@ -73,7 +73,6 @@ namespace Microwave.Test.Integration
         [Test]
         public void OnTimePressed_ShowTime_ShowTimeTrue()
         {
-            // Power button skal trykkes først, for at state er SETPOWER - ELLER OGSÅ SKAL DER SKRIVES OM DER
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _display.Received().ShowTime(1,0);
@@ -82,7 +81,6 @@ namespace Microwave.Test.Integration
         [Test]
         public void OnStartCancelPressed_LightTurnOn_TurnOnTrue()
         {
-            // Power og timer button skal være trykket for at være i rette state - ELLER OGSÅ SKAL DER RETTES FOR Userinterface
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();

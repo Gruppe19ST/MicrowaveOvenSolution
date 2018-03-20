@@ -51,11 +51,11 @@ namespace Microwave.Test.Integration
             // blev initialiseret efter uut sådan som det stod før. 
 
             // Included
-            _cookController = new CookController(_timer, _display, _powerTube, _userInterface);
+            _cookController = new CookController(_timer, _display, _powerTube);
             _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
-            
+            _cookController.UI = _userInterface;
 
-            
+
         }
 
         #region Display.Integration
