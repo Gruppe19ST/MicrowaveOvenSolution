@@ -11,7 +11,7 @@ using NSubstitute;
 
 namespace Microwave.Test.Integration
 {
-    class IT5_DisplayOutput
+    class IT6_DisplayOutput
     {
         // Drivers
         private Door _driverDoor;
