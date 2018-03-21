@@ -29,16 +29,51 @@ namespace MicrowaveOvenClasses
 
             cookcontroller.UI = userinterface;
 
-            // Simulate user activities
-            door.Open();
-            door.Close();
-            powerButton.Press();
-            timebutton.Press();
-            startcancelbutton.Press();
+            //// Simulate user activities
+            //door.Open();
+            //door.Close();
+            //powerButton.Press();
+            //timebutton.Press();
+            //startcancelbutton.Press();
 
-            // Wait while the classes, including the timer, do their job
-            System.Console.WriteLine("Tast enter når applikationen skal afsluttes");
-            System.Console.ReadLine();
+            //// Wait while the classes, including the timer, do their job
+            //System.Console.WriteLine("Tast enter når applikationen skal afsluttes");
+            //System.Console.ReadLine();
+
+            System.Console.WriteLine("Velkommen til din mikroovn-app #smart");
+            Console.WriteLine("Indstil først power ved at trykke på 'P'.\n" +
+                              "Indstil derefter tiden ved at trykke på 'T'.\n" +
+                              "Når den ønskede power og tid er indstillet, start da mikroovnen ved at trykke på 'S'");
+
+            bool running = true;
+
+            while (running)
+            {
+                var tast = Console.ReadKey();
+                Console.WriteLine();
+
+                switch (tast.Key)
+                {
+                    case ConsoleKey.P:
+                        powerButton.Press();
+                        break;
+                    case ConsoleKey.T:
+                        timebutton.Press();
+                        break;
+                    case ConsoleKey.S:
+                        startcancelbutton.Press();
+                        break;
+                    case ConsoleKey.Escape:
+                        running = false;
+                        break;
+
+                }
+            }
+
+
+            {
+                
+            }
         }
 
     }
