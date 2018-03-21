@@ -31,9 +31,9 @@ namespace MicrowaveOvenClasses.Boundary
             _percentage = PowerPercentage(power);
 
             // _percentage indsat i stedet for power
-            if (_percentage < 1 || 100 < _percentage)
+            if (_percent < 1 || 100 < _percent)
             {
-                throw new ArgumentOutOfRangeException("power", power, "Must be between 1 and 100 % (incl.)");
+                throw new ArgumentOutOfRangeException("percent", _percentage, "Must be between 1 and 100 % (incl.)");
             }
 
             if (IsOn)

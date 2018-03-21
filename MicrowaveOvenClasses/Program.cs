@@ -13,7 +13,7 @@ namespace MicrowaveOvenClasses
     {
         static void Main(string[] args)
         {
-            // Setup all the objects, 
+            // Setup all the objects
             var door = new Door();
             var powerButton = new Button();
             var timebutton = new Button();

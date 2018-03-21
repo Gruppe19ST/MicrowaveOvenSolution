@@ -23,7 +23,8 @@ namespace Microwave.Test.Unit
         public void TurnOn_WasOff_CorrectOutput()
         {
             uut.TurnOn(50);
-            output.Received().OutputLine(Arg.Is<string>(str => str.Contains("50 %")));
+            // 50% ud af 700 = 7% (afrundet)
+            output.Received().OutputLine(Arg.Is<string>(str => str.Contains("7 %")));
         }
 
         [Test]
@@ -57,7 +58,8 @@ namespace Microwave.Test.Unit
         [Test]
         public void TurnOn_HighPower_ThrowsException()
         {
-            Assert.Throws<System.ArgumentOutOfRangeException>(() => uut.TurnOn(101));
+            // Over max power 700
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => uut.TurnOn(701));
         }
 
         [Test]
