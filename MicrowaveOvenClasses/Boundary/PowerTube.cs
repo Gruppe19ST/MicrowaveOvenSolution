@@ -6,7 +6,6 @@ namespace MicrowaveOvenClasses.Boundary
     public class PowerTube : IPowerTube
     {
         private IOutput myOutput;
-        private double _curPower = 0;
         private int _maxPower = 700;
         private double _percent;
         private int _percentage;
