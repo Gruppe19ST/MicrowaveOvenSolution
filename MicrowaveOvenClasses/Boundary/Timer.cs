@@ -43,6 +43,8 @@ namespace MicrowaveOvenClasses.Boundary
         {
             // One tick has passed
             // Do what I should
+
+            // Changed from 1000 to 1 as we're working with seconds, not milliseconds
             TimeRemaining -= 1;
             TimerTick?.Invoke(this, EventArgs.Empty);
 

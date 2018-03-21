@@ -15,7 +15,8 @@ namespace MicrowaveOvenClasses.Controllers
         private IPowerTube myPowerTube;
         private ITimer myTimer;
 
-
+        // The other constructor removed as it created a circular dependency between UserInterface and CookController
+        // Now the CookController gets to know what userinterface to use through the property "UI"
         public CookController(
             ITimer timer,
             IDisplay display,
