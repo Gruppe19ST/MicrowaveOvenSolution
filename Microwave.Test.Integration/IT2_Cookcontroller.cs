@@ -95,18 +95,19 @@ namespace Microwave.Test.Integration
             _timer.Received().Start(2*60);
         }
 
-        [Test]
-        public void OnTimerTick_TimerPressedOnce_DisplayShowTrue()
-        {
-            _driverPowerButton.Press();
-            _driverPowerButton.Press();
-            _driverTimeButton.Press();
-            _driverTimeButton.Press();
-            _driverStartCancelButton.Press();
-            //Thread.Sleep(1850);
-            //_display.Received().ShowTime(01,59);
-            //_display.Received().ShowPower(100);
-        }
+        //[Test]
+        //public void OnTimerTick_TimerPressedOnce_DisplayShowTrue()
+        //{
+        //    _driverPowerButton.Press();
+        //    _driverPowerButton.Press();
+        //    _driverTimeButton.Press();
+        //    _driverTimeButton.Press();
+        //    _driverStartCancelButton.Press();
+        //    Thread.Sleep(1850);
+        //    _timer.TimerTick += Raise.EventWith(this, EventArgs.Empty);
+        //    _display.Received().ShowTime(01,59);
+        //    //_display.Received().ShowPower(100);
+        //}
 
         [Test]
         public void OnTimerExpired_TimerPressedOnce_DisplayClearTrue()
@@ -114,6 +115,9 @@ namespace Microwave.Test.Integration
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
+            //Thread.Sleep(5000);
+            // Trigger event
+            _timer.Expired += Raise.EventWith(this, EventArgs.Empty);
             _display.Received().Clear();
 
         }
