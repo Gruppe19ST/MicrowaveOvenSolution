@@ -21,12 +21,12 @@ namespace Microwave.Test.Unit
             ManualResetEvent pause = new ManualResetEvent(false);
 
             uut.TimerTick += (sender, args) => pause.Set();
-            // Ændret da start tager sekunder frem for millisekunder
+            // Changed from milliseconds to seconds
             // 10 seconds
             uut.Start(60/6);
 
             // wait for a tick, but no longer
-            // Lidt over 10 sekunder
+            // A bit more than 10 sekunder
             Assert.That(pause.WaitOne(10100));
 
             uut.Stop();
@@ -38,7 +38,7 @@ namespace Microwave.Test.Unit
             ManualResetEvent pause = new ManualResetEvent(false);
 
             uut.TimerTick += (sender, args) => pause.Set();
-            // Vi arbejder i minutter
+            // Seconds instead of milliseconds
             uut.Start(2*60);
 
             // wait shorter than a tick, shouldn't come
@@ -53,7 +53,7 @@ namespace Microwave.Test.Unit
             ManualResetEvent pause = new ManualResetEvent(false);
 
             uut.Expired += (sender, args) => pause.Set();
-            // Ændret da start tager sekunder frem for millisekunder
+            // Changed from milliseconds to seconds
             // 10 seconds
             uut.Start(60/6);
 
@@ -70,12 +70,12 @@ namespace Microwave.Test.Unit
             ManualResetEvent pause = new ManualResetEvent(false);
 
             uut.Expired += (sender, args) => pause.Set();
-            // Ændret da start tager sekunder frem for millisekunder
+            // Changed from milliseconds to seconds
             // 10 seconds
             uut.Start(60/6);
 
             // wait shorter than expiration, shouldn't come
-            // 8 sekunder
+            // 8 seconds
             Assert.That(!pause.WaitOne(8000));
 
             uut.Stop();
@@ -90,10 +90,10 @@ namespace Microwave.Test.Unit
             uut.Expired += (sender, args) => pause.Set();
             uut.TimerTick += (sender, args) => notifications++;
 
-            // 10 sekunder
+            // 10 seconds
             uut.Start(60/6);
 
-            // wait longer than expiration (11 sekunder)
+            // wait longer than expiration (11 seconds)
             Assert.That(pause.WaitOne(11000));
             uut.Stop();
 
