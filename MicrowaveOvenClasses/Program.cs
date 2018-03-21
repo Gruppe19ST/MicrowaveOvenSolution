@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MicrowaveOvenClasses.Interfaces;
 using MicrowaveOvenClasses.Boundary;
 using MicrowaveOvenClasses.Controllers;
+using Timer = MicrowaveOvenClasses.Boundary.Timer;
 
 namespace MicrowaveOvenClasses
 {
@@ -40,10 +42,22 @@ namespace MicrowaveOvenClasses
             //System.Console.WriteLine("Tast enter når applikationen skal afsluttes");
             //System.Console.ReadLine();
 
+            //Simple implementation of console application, where the food is inserted in microoven
+            // and the user then uses the keys to simulates the pushes on buttons
             System.Console.WriteLine("Velkommen til din mikroovn-app #smart");
-            Console.WriteLine("Indstil først power ved at trykke på 'P'.\n" +
+            System.Console.WriteLine("Indsæt mad i ovn");
+            // First the user opens the door
+            door.Open();
+            // Uses 5 seconds to insert food
+            Thread.Sleep(5000);
+            Console.WriteLine("Mad placeret, luk dør");
+            // Closes door
+            door.Close();
+
+            Console.WriteLine("Indstil først power ved at trykke på 'P'. (Annullér handling ved tryk på 'S')\n" +
                               "Indstil derefter tiden ved at trykke på 'T'.\n" +
-                              "Når den ønskede power og tid er indstillet, start da mikroovnen ved at trykke på 'S'");
+                              "Når den ønskede power og tid er indstillet, start da mikroovnen ved at trykke på 'S'\n" +
+                              "(Applikationen kan stoppes ved tryk på ESCAPE)");
 
             bool running = true;
 
