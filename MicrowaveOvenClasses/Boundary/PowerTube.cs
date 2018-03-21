@@ -17,6 +17,8 @@ namespace MicrowaveOvenClasses.Boundary
             myOutput = output;
         }
 
+        // Method created to calculate power percentage
+        // Percentage out of a maximum 700 W
         public int PowerPercentage(int power)
         {
             _percent = (Convert.ToDouble(power) / _maxPower) * 100;
@@ -29,7 +31,7 @@ namespace MicrowaveOvenClasses.Boundary
         {
             _percentage = PowerPercentage(power);
 
-            // _percentage indsat i stedet for power
+            // _percentage used instead of power
             if (_percent < 1 || 100 < _percent)
             {
                 throw new ArgumentOutOfRangeException("percent", _percentage, "Must be between 1 and 100 % (incl.)");
