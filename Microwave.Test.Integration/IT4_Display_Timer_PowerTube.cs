@@ -49,8 +49,6 @@ namespace Microwave.Test.Integration
             _display = new Display(_output);
             _timer = new Timer();
             _powerTube = new PowerTube(_output);
-            // Der var en null-reference på output fordi output først
-            // blev initialiseret efter uut sådan som det stod før. 
 
             // Included
             _cookController = new CookController(_timer, _display, _powerTube);
@@ -93,6 +91,13 @@ namespace Microwave.Test.Integration
         [Test]
         public void StartCooking_PowertubeAt50_OutputIsCorrect()
         {
+            // Press Power 7 times to hit 350 W = 50%
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
@@ -102,6 +107,19 @@ namespace Microwave.Test.Integration
         [Test]
         public void StartCooking_PowertubeAt100_OutputIsCorrect()
         {
+            // Press Power 14 times to hit 700 W = 100%
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
+            _driverPowerButton.Press();
             _driverPowerButton.Press();
             _driverPowerButton.Press();
             _driverTimeButton.Press();
@@ -115,20 +133,10 @@ namespace Microwave.Test.Integration
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            Thread.Sleep(60050);
+            Thread.Sleep(61000);
             _output.Received().OutputLine("PowerTube turned off");
         }
         #endregion
-
-        [Test]
-        public void OnTimerTick_TimePressedOnce_ShowTimeTrue()
-        {
-            _driverPowerButton.Press();
-            _driverTimeButton.Press();
-            _driverStartCancelButton.Press();
-            Thread.Sleep(1250);
-            _display.Received().ShowTime(0,59);
-        }
     }
 
     [TestFixture]
