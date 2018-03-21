@@ -9,7 +9,8 @@ namespace Microwave.Test.Integration
     [TestFixture]
     public class IT1_Userinterface
     {
-        // Drivers
+        #region Defining objects
+        // Drivers (door and 3 buttons)
         private Door _driverDoor;
         private Button _driverPowerButton;
         private Button _driverTimeButton;
@@ -22,6 +23,7 @@ namespace Microwave.Test.Integration
 
         // Unit under test
         private UserInterface _uut;
+    #endregion
 
         [SetUp]
         public void SetUp()
@@ -64,44 +66,50 @@ namespace Microwave.Test.Integration
         #region Button.Integration
 
         [Test]
-        public void OnPowerPressed_ShowPower_ShowPowerTrue()
+        public void OnPowerPressed_PowerPressedOnce_ShowPowerTrue()
         {
             _driverPowerButton.Press();
-            _display.Received().ShowPower(50);
+            _display.Received().ShowPower(1*50);
         }
 
         [Test]
-        public void OnTimePressed_ShowTime_ShowTimeTrue()
+        public void OnTimePressed_TimePressedOnce_ShowTimeTrue()
         {
+            // Must push PowerButton before being able to push TimeButton
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _display.Received().ShowTime(1,0);
         }
 
         [Test]
-        public void OnStartCancelPressed_LightTurnOn_TurnOnTrue()
+        public void OnStartCancelPressed_StateSetTime_TurnOnLight()
         {
+            // Must push PowerButton before being able to push TimeButton
             _driverPowerButton.Press();
+            // Must push TimeButton to be in state "SetTime"
             _driverTimeButton.Press();
+            // Push Start/CancelButton to start microoven
             _driverStartCancelButton.Press();
             _light.Received().TurnOn();
         }
 
         [Test]
-        public void OnStartCancelPressed_CookCtrlStartCooking_StartCookingTrue()
+        public void OnStartCancelPressed_StateSetTime_StartCookingCookCtrl()
         {
-            int time = 1;
-            // Power og timer button skal være trykket for at være i rette state - ELLER OGSÅ SKAL DER RETTES FOR Userinterface
+            // Must push PowerButton before being able to push TimeButton
             _driverPowerButton.Press();
+            // Must push TimeButton to be in state "SetTime"
             _driverTimeButton.Press();
+            // Push Start/CancelButton to start microoven
             _driverStartCancelButton.Press();
-            _cookController.Received().StartCooking(50,time*60);
+            _cookController.Received().StartCooking(50,1*60);
         }
 
         #endregion
 
         #region Extentions
 
+        #region Door.Extensions
         [Test] // Extention 1: User presses StartCancel btn during power setup
         public void StartCancelDuringSetup_ClearDisplay_DisplayIsCleared()
         {
@@ -109,29 +117,6 @@ namespace Microwave.Test.Integration
             _driverDoor.Close();
             _driverPowerButton.Press();
             _driverStartCancelButton.Press();
-            _display.Received().Clear();
-        }
-
-        [Test] // Extention 2: User opens door during power setup
-        public void DoorOpenDuringPowerSetup_ClearDispAndLightOn_DisplayIsClearedAndLightIsOn()
-        {
-            _driverDoor.Open();
-            _driverDoor.Close();
-            _driverPowerButton.Press();
-            _driverDoor.Open();
-            _light.Received().TurnOn();
-            _display.Received().Clear();
-        }
-
-        [Test] // Extention 2: User opens door during power setup
-        public void DoorOpenDuringTimeSetup_ClearDispAndLightOn_DisplayIsClearedAndLightIsOn()
-        {
-            _driverDoor.Open();
-            _driverDoor.Close();
-            _driverPowerButton.Press();
-            _driverTimeButton.Press();
-            _driverDoor.Open();
-            _light.Received().TurnOn();
             _display.Received().Clear();
         }
 
@@ -149,6 +134,32 @@ namespace Microwave.Test.Integration
             _cookController.Received().Stop();
 
         }
+        #endregion
+
+        #region Button.Extensions
+        [Test] // Extention 2_1: User opens door during power setup
+        public void DoorOpenDuringPowerSetup_ClearDispAndLightOn_DisplayIsClearedAndLightIsOn()
+        {
+            _driverDoor.Open();
+            _driverDoor.Close();
+            _driverPowerButton.Press();
+            _driverDoor.Open();
+            _light.Received().TurnOn();
+            _display.Received().Clear();
+        }
+
+        [Test] // Extention 2_2: User opens door during time setup
+        public void DoorOpenDuringTimeSetup_ClearDispAndLightOn_DisplayIsClearedAndLightIsOn()
+        {
+            _driverDoor.Open();
+            _driverDoor.Close();
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverDoor.Open();
+            _light.Received().TurnOn();
+            _display.Received().Clear();
+        }
+        
         [Test] // Extention 4: User opens door during cooking
         public void DoorOpensDuringCooking_CookingStops_CookingStopped()
         {
@@ -163,6 +174,7 @@ namespace Microwave.Test.Integration
             _cookController.Received().Stop();
 
         }
+        #endregion
 
         #endregion
     }

@@ -9,9 +9,11 @@ using MicrowaveOvenClasses.Interfaces;
 using NSubstitute;
 using NUnit.Framework;
 
+// This is not a real integration test, as we can't test on output to System.Console
+// This integration test is rather a guideline to what to verify through visual test on the application part
 namespace Microwave.Test.Integration
 {
-    class IT5_LightOutput
+    class IT7_LightOutput
     {
         // Drivers
         private Door _driverDoor;

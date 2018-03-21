@@ -59,10 +59,11 @@
     <Compile Include="IT1_Userinterface.cs" />
     <Compile Include="IT2_Cookcontroller.cs" />
     <Compile Include="IT3_DisplayAndLight.cs" />
-    <Compile Include="IT4_Display_Timer_PowerTube.cs" />
-    <Compile Include="IT5_LightOutput.cs" />
+    <Compile Include="IT5_Display_PowerTube.cs" />
+    <Compile Include="IT4_Timer.cs" />
+    <Compile Include="IT7_LightOutput.cs" />
     <Compile Include="IT6_DisplayOutput.cs" />
-    <Compile Include="IT7_PowerTubeOutput.cs" />
+    <Compile Include="IT8_PowerTubeOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,11 +9,12 @@ using NSubstitute;
 using MicrowaveOvenClasses.Boundary;
 using MicrowaveOvenClasses.Controllers;
 using MicrowaveOvenClasses.Interfaces;
+using Timer = MicrowaveOvenClasses.Boundary.Timer;
 
 namespace Microwave.Test.Integration
 {
     [TestFixture]
-    class IT2_Cookcontroller
+    public class IT5_Display_PowerTube
     {
         #region Defining objects
         // Drivers (door and 3 buttons)
@@ -21,76 +22,95 @@ namespace Microwave.Test.Integration
         private Button _driverPowerButton;
         private Button _driverTimeButton;
         private Button _driverStartCancelButton;
-        
-        // Included
-        private UserInterface _userInterface;
 
         // Unit under test
+        private Display _display;
+        private PowerTube _powerTube;
+
+        // Included
+        private Timer _timer;
+        private UserInterface _userInterface;
         private CookController _cookController;
 
-        // Stubs/mock
-        private IDisplay _display;
-        private ITimer _timer;
-        private IPowerTube _powertube;
+        // Stubs/mocks
         private ILight _light;
-
+        private IOutput _output;
         #endregion
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
             // Drivers
             _driverDoor = new Door();
             _driverPowerButton = new Button();
             _driverTimeButton = new Button();
             _driverStartCancelButton = new Button();
-           
+
             // Stubs/mocks
-            _display = Substitute.For<IDisplay>();
-            _timer = Substitute.For<ITimer>();
-            _powertube = Substitute.For<IPowerTube>();
             _light = Substitute.For<ILight>();
+            _output = Substitute.For<IOutput>();
 
             // Unit under test
-            _cookController = new CookController(_timer, _display, _powertube);
+            _display = new Display(_output);
+            _powerTube = new PowerTube(_output);
 
             // Included
+            _timer = new Timer();
+            _cookController = new CookController(_timer, _display, _powerTube);
             _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
-            
-            // Property inject userinterface into cookcontroller to support the circular dependency between them
             _cookController.UI = _userInterface;
+
+
         }
 
-        #region UserInterface.Integration
+        #region Display
+
         [Test]
-        public void OnStartCancelPressed_StateSetTime_PowerTubeOnTrue()
+        public void StartCookingForOneMinut_TimerTicksOnce_DisplayOutputIsCorrect()
         {
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _powertube.Received().TurnOn(1*50);
+            // Sleep for a bit more than a second
+            Thread.Sleep(1050);
+            _output.Received().OutputLine("Display shows: 00:59");
         }
 
         [Test]
-        public void OnStartCancelPressed_StateSetTimer_StartTimer()
+        public void StartCookingForOneMinut_TimerExpires_DisplayOutputIsCorrect()
         {
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _timer.Received().Start(1*60);
-        }
-
-        [Test]
-        public void OnTimerExpired_StateCooking_ClearDisplay()
-        {
-            _driverPowerButton.Press();
-            _driverTimeButton.Press();
-            _driverStartCancelButton.Press();
-            _timer.Expired += Raise.EventWith(this, EventArgs.Empty);
-            _display.Received().Clear();
+            // Sleep for a bit more than a minute
+            Thread.Sleep(61000);
+            _output.Received().OutputLine("Display cleared");
         }
 
         #endregion
-    }
 
+        #region Powertube
+        [Test]
+        public void StartCooking_PowertubeTurnOnAt7Percent_OutputIsCorrect()
+        {
+            // Press Power once = 50 W = 7% of 700
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            _output.Received().OutputLine("PowerTube works with 7 %");
+           
+        }
+        
+        [Test]
+        public void CookingIsDone_PowertubeTurnsOff_OutputIsCorrect()
+        {
+            _driverPowerButton.Press();
+            _driverTimeButton.Press();
+            _driverStartCancelButton.Press();
+            Thread.Sleep(61000);
+            _output.Received().OutputLine("PowerTube turned off");
+        }
+        #endregion
+    }
 }
+

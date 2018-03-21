@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using MicrowaveOvenClasses.Boundary;
 using MicrowaveOvenClasses.Controllers;
 using MicrowaveOvenClasses.Interfaces;
 using NSubstitute;
+using NUnit.Framework;
 
+// This is not a real integration test, as we can't test on output to System.Console
+// This integration test is rather a guideline to what to verify through visual test on the application part
 namespace Microwave.Test.Integration
 {
-    // This is not a real integration test, as we can't test on output to System.Console
-    // This integration test is rather a guideline to what to verify through visual test on the application part
-    class IT6_DisplayOutput
+    class IT8_PowerTubeOutput
     {
         // Drivers
         private Door _driverDoor;
@@ -24,7 +24,7 @@ namespace Microwave.Test.Integration
         // Stubs/mocks
         private ILight _light;
         private ITimer _timer;
-        private IPowerTube _powerTube;
+        private IDisplay _display;
 
         // Unit under test
         private Output _output;
@@ -32,7 +32,7 @@ namespace Microwave.Test.Integration
         // Included
         private UserInterface _userInterface;
         private CookController _cookController;
-        private Display _display;
+        private PowerTube _powerTube;
 
         [SetUp]
         public void SetUp()
@@ -46,66 +46,48 @@ namespace Microwave.Test.Integration
             // Stubs/mocks
             _light = Substitute.For<ILight>();
             _timer = Substitute.For<ITimer>();
-            _powerTube = Substitute.For<IPowerTube>();
+            _display = Substitute.For<IDisplay>();
 
             // Unit under test
             _output = new Output();
 
             // Included
-            _display = new Display(_output);
+            _powerTube = new PowerTube(_output);
             _cookController = new CookController(_timer, _display, _powerTube);
-            _userInterface = new UserInterface(_driverPowerButton,_driverTimeButton,_driverStartCancelButton,_driverDoor,_display,_light,_cookController);
+            _userInterface = new UserInterface(_driverPowerButton, _driverTimeButton, _driverStartCancelButton, _driverDoor, _display, _light, _cookController);
             _cookController.UI = _userInterface;
 
         }
 
-        #region Display-Output.Integration
+        #region PowerTube-Output.Integration
 
         [Test]
-        public void ShowPower_Power50_LogLineCalled()
+        public void OnStartCancelPressed_PowerTubeTurnOn_LogLineCalled()
         {
-            //int power = 75;
             _driverPowerButton.Press();
-            //_display.ShowPower(power);
-            _output.OutputLine($"Display shows: 50 W");
-        }
-
-        [Test]
-        public void ShowPower_Power100_LogLineCalled()
-        {
-            //int power = 75;
-            _driverPowerButton.Press();
-            _driverPowerButton.Press();
-            //_display.ShowPower(power);
-            _output.OutputLine($"Display shows: 100 W");
-        }
-
-        [Test]
-        public void ShowTime_Time1_LogLineCalled()
-        {
             _driverPowerButton.Press();
             _driverTimeButton.Press();
-            _output.OutputLine($"Display shows: {1:D2}:{00:D2}");
+            _driverStartCancelButton.Press();
+            _output.OutputLine($"PowerTube works with {100} %");
         }
 
         [Test]
-        public void ShowTime_Time2_LogLineCalled()
+        public void OpenDoor_LightTurnOff_LogLineCalled()
         {
-            _driverPowerButton.Press();
-            _driverTimeButton.Press();
-            _driverTimeButton.Press();
-            _output.OutputLine($"Display shows: {2:D2}:{00:D2}");
+            _driverDoor.Close();
+            _output.OutputLine("Light is turned off");
         }
 
         [Test]
-        public void Clear_LogLine_LogLineCalled()
+        public void CookingIsDone_LightTurnOff_LogLineCalled()
         {
             _driverPowerButton.Press();
             _driverTimeButton.Press();
             _driverStartCancelButton.Press();
-            _output.OutputLine("Display cleared");
-        }
-        #endregion
 
+            _output.OutputLine("Light is turned off");
+        }
+
+        #endregion
     }
 }
