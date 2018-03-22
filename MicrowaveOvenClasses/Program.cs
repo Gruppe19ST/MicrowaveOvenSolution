@@ -54,7 +54,7 @@ namespace MicrowaveOvenClasses
             // Closes door
             door.Close();
 
-            Console.WriteLine("Indstil først power ved at trykke på 'P'. (Annullér handling ved tryk på 'S')\n" +
+            Console.WriteLine("\nIndstil først power ved at trykke på 'P'. (Annullér handling ved tryk på 'S')\n" +
                               "Indstil derefter tiden ved at trykke på 'T'.\n" +
                               "Når den ønskede power og tid er indstillet, start da mikroovnen ved at trykke på 'S'\n" +
                               "(Applikationen kan stoppes ved tryk på ESCAPE)");
